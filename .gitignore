@@ -1,0 +1,26 @@
+# Maven
+target/
+*.jar
+*.war
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Logs
+logs/
+*.log
+
+# Environment
+.env
+.DS_Store
+
+# System files
+*.swp
+*.swo
+
+# Compiled class files
+*.class
