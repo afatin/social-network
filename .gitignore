@@ -12,6 +12,11 @@ target/
 *.iml
 *.ipr
 
+# Maven
+target/
+*.jar
+*.war
+
 ### Eclipse ###
 .apt_generated
 .classpath
@@ -34,5 +39,20 @@ build/
 ### VS Code ###
 .vscode/
 
+# Logs
+logs/
+*.log
+
 ### Mac OS ###
 .DS_Store
+
+# Environment
+.env
+.DS_Store
+
+# System files
+*.swp
+*.swo
+
+# Compiled class files
+*.class
