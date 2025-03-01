@@ -12,7 +12,8 @@ public class DbFunctions {
             conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/" + dbname, user, pass);
             if (conn != null) {
                 System.out.println("Connection Established");
-            } else {
+            }
+            else  {
                 System.out.println("Connection Failed");
             }
 
