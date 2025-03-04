@@ -1,8 +1,7 @@
 package org.example;
 
-import org.example.entity.Post;
 import org.example.entity.User;
-import org.example.entity.UserDAO;
+import org.example.methods.SubscriptionDAO;
 import org.example.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -11,22 +10,32 @@ public class Main {
     public static void main(String[] args) {
 
         Session session = HibernateUtil.getSessionFactory().openSession();
+
+        if (session != null){
+            System.out.println("Connection Established");
+        }
+
+
         Transaction transaction = session.beginTransaction();
-
-        // создание пользователя
-        User user = new User();
-        user.setLogin("nastya");
-        user.setPassword("pass2");
-        user.setName("Настя");
-
-        session.save(user);
+//
+        SubscriptionDAO subscriptionDAO = new SubscriptionDAO();
+        subscriptionDAO.subscribe(14L, 13L);
+//
+//        // создание пользователя
+//        User user = new User();
+//        user.setLogin("nastya");
+//        user.setPassword("12345");
+//        user.setName("Настя");
+//
+//        session.save(user);
+//
 
         // Создаем пост
-        Post post = new Post();
-        post.setContent("Всем привет!!");
-        post.setAuthor(user);
+//        Post post = new Post();
+//        post.setContent("Всем ваолимлипривет!! Как дела?");
+//        post.setAuthor(user);
 
-        session.save(post);
+//        session.save(post);
 
         //удаление пользователя
         //UserDAO userDAO = new UserDAO();

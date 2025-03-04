@@ -1,4 +1,4 @@
-package org.example.entity;
+package org.example.methods;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
