@@ -1,22 +1,26 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
+import util.PasswordUtil;
+
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "user_id")
+    private Integer id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "login", nullable = false)
     private String login;
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
@@ -26,28 +30,16 @@ public class User {
     private List<Subscription> subscriptions;
 
     // Конструкторы
-    public User() {
-    }
-
-    public User(String login, String password, String name) {
-        this.login = login;
-        this.password = password;
-        this.name = name;
-    }
+    public User() {}
 
     // Геттеры и сеттеры
-    public Long getId() {
+    public Integer getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getLogin() {
         return login;
     }
-
     public void setLogin(String login) {
         this.login = login;
     }
@@ -55,43 +47,29 @@ public class User {
     public String getPassword() {
         return password;
     }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPassword(String rawPassword) {
+        this.password = PasswordUtil.hashPassword(rawPassword);
     }
 
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public List<Post> getPosts() {
-        return posts;
-    }
 
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
+//    public List<Post> getPosts() {
+//        return posts;
+//    }
+//    public void setPosts(List<Post> posts) {
+//        this.posts = posts;
+//    }
+//    public List<Subscription> getSubscriptions() {
+//        return subscriptions;
+//    }
+//    public void setSubscriptions(List<Subscription> subscriptions) {
+//        this.subscriptions = subscriptions;
+//    }
 
-    public List<Subscription> getSubscriptions() {
-        return subscriptions;
-    }
-
-    public void setSubscriptions(List<Subscription> subscriptions) {
-        this.subscriptions = subscriptions;
-    }
-
-    // Переопределение toString()
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }
