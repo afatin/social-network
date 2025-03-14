@@ -14,6 +14,7 @@ public class User implements Serializable {
     @Column(name = "user_id")
     private Integer id;
 
+
     @Column(name = "login", nullable = false)
     private String login;
 
