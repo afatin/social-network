@@ -14,7 +14,6 @@ public class UserService {
     @PersistenceContext
     private EntityManager entityManager;
 
-
     @Transactional
     public User createUser(String login, String name, String password) {
         User user = new User();
