@@ -1,7 +1,7 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
-import util.PasswordUtil;
+import org.example.util.PasswordUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,7 +14,7 @@ public class User implements Serializable {
     @Column(name = "user_id")
     private Integer id;
 
-    @Column(name = "login", nullable = false)
+    @Column(name = "login", nullable = false, unique = true)
     private String login;
 
     @Column(name = "password", nullable = false)
@@ -57,19 +57,5 @@ public class User implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-
-//    public List<Post> getPosts() {
-//        return posts;
-//    }
-//    public void setPosts(List<Post> posts) {
-//        this.posts = posts;
-//    }
-//    public List<Subscription> getSubscriptions() {
-//        return subscriptions;
-//    }
-//    public void setSubscriptions(List<Subscription> subscriptions) {
-//        this.subscriptions = subscriptions;
-//    }
 
 }

@@ -36,4 +36,8 @@ public class Subscription implements Serializable {
     public void setAuthor(User author) {
         this.author = author;
     }
+
+    public Object getId() {
+        return id;
+    }
 }

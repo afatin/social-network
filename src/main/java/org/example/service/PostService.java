@@ -1,5 +1,6 @@
-package service;
+package org.example.service;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.example.entity.Post;
 import org.example.entity.User;
 import jakarta.persistence.EntityManager;
@@ -28,13 +29,18 @@ public class PostService {
         return entityManager.createQuery(query, Post.class).getResultList();
     }
 
-    public List<Post> getPostByLogin(String login) {
-        String query = "SELECT c FROM Post c WHERE c.login LIKE :login";
+    public List<Post> getPostById(Integer id) {
+        String query = "SELECT c FROM Post c WHERE c.id = :id";
         return entityManager.createQuery(query, Post.class)
-                .setParameter("login", "%" + login + "%")
+                .setParameter("id", id)
                 .getResultList();
     }
 
-
+    public List<Post> getPostsByAuthorId(Integer authorId) {
+        String query = "SELECT p FROM Post p WHERE p.author.id = :authorId";
+        return entityManager.createQuery(query, Post.class)
+                .setParameter("authorId", authorId)
+                .getResultList();
+    }
 
 }
