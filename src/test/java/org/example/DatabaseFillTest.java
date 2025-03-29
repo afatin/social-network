@@ -37,21 +37,21 @@ public class DatabaseFillTest {
     @Test
     public void testFillDatabase() {
         // Создание пользователей
-        User user1 = userService.createUser("nastya", "Настя", "123");
-        User user2 = userService.createUser("artem", "Артём", "123");
-        User user3 = userService.createUser("oleg", "Олег", "123");
-        User user4 = userService.createUser("vika", "Вика", "123");
+        User user1 = userService.createUser("nastya1", "Настя", "123");
+        User user2 = userService.createUser("artem1", "Артём", "123");
+        User user3 = userService.createUser("oleg1", "Олег", "123");
+        User user4 = userService.createUser("vika1", "Вика", "123");
 
-        Post post1 = postService.createPost("всем привет, я Настя!", user1);
-        Post post2 = postService.createPost("всем привет, я Артём!", user2);
-        Post post3 = postService.createPost("всем привет, я Олег!", user3);
-        Post post4 = postService.createPost("всем привет, я Вика!", user4);
+        Post post1 = postService.createPost("всем привет, я Настя!", 1);
+        Post post2 = postService.createPost("всем привет, я Артём!", 2);
+        Post post3 = postService.createPost("всем привет, я Олег!", 3);
+        Post post4 = postService.createPost("всем привет, я Вика!", 4);
 
-        Subscription subs1 = subscriptionService.createSubscription(user1, user2);
-        Subscription subs2 = subscriptionService.createSubscription(user2, user1);
-        Subscription subs3 = subscriptionService.createSubscription(user1, user3);
-        Subscription subs4 = subscriptionService.createSubscription(user1, user4);
-        Subscription subs5 = subscriptionService.createSubscription(user4, user1);
+        Subscription subs1 = subscriptionService.createSubscription(1, 2);
+        Subscription subs2 = subscriptionService.createSubscription(2, 1);
+        Subscription subs3 = subscriptionService.createSubscription(1, 3);
+        Subscription subs4 = subscriptionService.createSubscription(1, 4);
+        Subscription subs5 = subscriptionService.createSubscription(4, 1);
 
 
         assertNotNull(user1.getId());

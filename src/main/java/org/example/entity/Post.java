@@ -37,6 +37,8 @@ public class Post implements Serializable{
         return author;
     }
 
+
+
     public void setAuthor(User author) {
         this.author = author;
     }

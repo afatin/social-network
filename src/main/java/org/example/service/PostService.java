@@ -16,7 +16,8 @@ public class PostService {
     private EntityManager entityManager;
 
     @Transactional
-    public Post createPost(String content, User author) {
+    public Post createPost(String content, Integer authorId) {
+        User author = entityManager.find(User.class, authorId);
         Post Post = new Post();
         Post.setContent(content);
         Post.setAuthor(author);
@@ -24,7 +25,7 @@ public class PostService {
         return Post;
     }
 
-    public List<Post> getAllPost() {
+    public List<Post> getAllPosts() {
         String query = "SELECT c FROM Post c";
         return entityManager.createQuery(query, Post.class).getResultList();
     }
@@ -42,5 +43,9 @@ public class PostService {
                 .setParameter("authorId", authorId)
                 .getResultList();
     }
+
+
+
+
 
 }

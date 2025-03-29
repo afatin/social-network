@@ -21,7 +21,7 @@ public class Subscription implements Serializable {
 
     public Subscription() { }
 
-    public User getSubscriberId() {
+    public User getSubscriber() {
         return subscriber;
     }
 

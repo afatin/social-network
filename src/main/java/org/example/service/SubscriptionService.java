@@ -2,11 +2,14 @@ package org.example.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
+import org.example.entity.Post;
 import org.example.entity.Subscription;
 import org.example.entity.User;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -14,7 +17,10 @@ public class SubscriptionService {
     @PersistenceContext
     private EntityManager entityManager;
     @Transactional
-    public Subscription createSubscription(User subscriber, User author){
+    public Subscription createSubscription(Integer subscriberId, Integer authorId){
+        User subscriber = entityManager.find(User.class, subscriberId);
+        User author = entityManager.find(User.class, authorId);
+
         Subscription subscription = new Subscription();
         subscription.setAuthor(author);
         subscription.setSubscriber(subscriber);
@@ -22,10 +28,35 @@ public class SubscriptionService {
         return subscription;
     }
 
-    public List<User> findAuthorsBySubscriber(User subscriber) {
+    @Transactional
+    public void deleteSubscription(Integer subscriberId, Integer authorId) {
+        TypedQuery<Subscription> query = entityManager.createQuery(
+                "SELECT s FROM Subscription s WHERE s.subscriber.id = :subscriberId AND s.author.id = :authorId",
+                Subscription.class
+        );
+        query.setParameter("subscriberId", subscriberId);
+        query.setParameter("authorId", authorId);
+
+        List<Subscription> subscriptions = query.getResultList();
+
+        for (Subscription subscription : subscriptions) {
+            entityManager.remove(subscription);
+        }
+    }
+
+    public List<User> findAuthorsBySubscriberId(Integer subscriberId) {
+        User subscriber = entityManager.find(User.class, subscriberId);
         String query = "SELECT s.author FROM Subscription s WHERE s.subscriber = :subscriber";
         return entityManager.createQuery(query, User.class)
                 .setParameter("subscriber", subscriber)
+                .getResultList();
+    }
+
+    public List<Post> getPostsBySubscriberId(Integer subscriberId) {
+        List<User> authors = findAuthorsBySubscriberId(subscriberId);
+        String query = "SELECT p FROM Post p WHERE p.author IN :authors";
+        return entityManager.createQuery(query, Post.class)
+                .setParameter("authors", authors)
                 .getResultList();
     }
 

@@ -33,6 +33,13 @@ public class UserService {
         return entityManager.find(User.class, id);
     }
 
+    public List<User> searchUserByName(String nameQuery) {
+        String query = "SELECT u FROM User u WHERE u.name LIKE :nameQuery";
+        return entityManager.createQuery(query, User.class)
+                .setParameter("nameQuery", "%" + nameQuery + "%")
+                .getResultList();
+    }
+
     @Transactional
     public void updateUserName(Integer userId, String newName) {
         User user = entityManager.find(User.class, userId);

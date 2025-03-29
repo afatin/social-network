@@ -29,33 +29,27 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "subscriber", cascade = CascadeType.ALL)
     private List<Subscription> subscriptions;
 
-    // Конструкторы
     public User() {}
 
-    // Геттеры и сеттеры
     public Integer getId() {
         return id;
     }
-
     public String getLogin() {
         return login;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public String getName() {
+        return name;
     }
     public void setLogin(String login) {
         this.login = login;
     }
-
-    public String getPassword() {
-        return password;
-    }
     public void setPassword(String rawPassword) {
         this.password = PasswordUtil.hashPassword(rawPassword);
-    }
-
-    public String getName() {
-        return name;
     }
     public void setName(String name) {
         this.name = name;
     }
-
 }

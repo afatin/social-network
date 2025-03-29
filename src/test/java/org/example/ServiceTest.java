@@ -32,37 +32,64 @@ public class ServiceTest {
     private PostService postService;
 
     @Test
-    public void testGetSubscribedUsers() {
-        User user1 = userService.getUserById(2);
-
-        List<User> subscribedUsers = subscriptionService.findAuthorsBySubscriber(user1);
-
-        System.out.println("Пользователь " + user1.getLogin() + " подписан на:");
-
-        for (User author : subscribedUsers) {
-            System.out.println("ID: " + author.getId() + ", Имя: " + author.getLogin());
-
-            // Получаем все посты автора
-            List<Post> posts = postService.getPostsByAuthorId(author.getId());
-
-            if (posts.isEmpty()) {
-                System.out.println(" - Нет постов");
-            } else {
-                System.out.println("Посты автора:");
-                for (Post post : posts) {
-                    System.out.println(" - " + post.getContent());
-                }
-            }
-        }
-        System.out.println("Посты пользователя " + user1.getLogin());
-        List<Post> posts = postService.getPostsByAuthorId(user1.getId());
+    public void a() {
+        List<Post> posts = subscriptionService.getPostsBySubscriberId(1);
         if (posts.isEmpty()) {
             System.out.println(" - Нет постов");
         } else {
+            System.out.println("Посты автора:");
             for (Post post : posts) {
                 System.out.println(" - " + post.getContent());
             }
         }
 
     }
+    @Test
+    public void b(){
+        userService.updateUserName(9, "Ванька-встанька");
+    }
+    @Test
+    public void c(){
+        userService.deleteUser(9);
+    }
+
+    @Test
+    public void d(){
+        subscriptionService.deleteSubscription(1,7);
+    }
+
+//    @Test
+//    public void testGetSubscribedUsers() {
+//        User user1 = userService.getUserById(1);
+//
+//        List<User> subscribedUsers = subscriptionService.findAuthorsBySubscriberId(1);
+//
+//        System.out.println("Пользователь " + user1.getLogin() + " подписан на:");
+//
+//        for (User author : subscribedUsers) {
+//            System.out.println("ID: " + author.getId() + ", Имя: " + author.getLogin());
+//
+//            // Получаем все посты автора
+//            List<Post> posts = postService.getPostsByAuthorId(author.getId());
+//
+//            if (posts.isEmpty()) {
+//                System.out.println(" - Нет постов");
+//            } else {
+//                System.out.println("Посты автора:");
+//                for (Post post : posts) {
+//                    System.out.println(" - " + post.getContent());
+//                }
+//            }
+//        }
+//        System.out.println("Посты пользователя " + user1.getLogin());
+//        List<Post> posts = postService.getPostsByAuthorId(user1.getId());
+//        if (posts.isEmpty()) {
+//            System.out.println(" - Нет постов");
+//        } else {
+//            for (Post post : posts) {
+//                System.out.println(" - " + post.getContent());
+//            }
+//        }
+//
+//    }
 }
