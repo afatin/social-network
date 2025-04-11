@@ -1,6 +1,8 @@
 package org.example.controller;
 
 
+import org.example.dto.PostDTO;
+import org.example.dto.UserDTO;
 import org.example.entity.Post;
 import org.example.entity.User;
 import org.example.service.SubscriptionService;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import java.net.URI;
 import java.util.List;
 
 
@@ -38,17 +42,20 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Ошибка валидации данных"),
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(
+    public ResponseEntity<Void> createUser(@RequestBody User user) {
+        User createdUser = userService.createUser(
                 user.getLogin(),
                 user.getName(),
                 user.getPassword()
-        ));
+        );
+
+        URI location = URI.create("/users/" + createdUser.getId());  // генерируем URI нового ресурса
+        return ResponseEntity.created(location).build(); // возвращаем статус 201 и Location заголовок
     }
     @GetMapping
     @Operation(summary = "Вывести всех пользователей")
     @ApiResponse(responseCode = "200", description = "Список пользователей успешно получен")
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
@@ -58,18 +65,18 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Пользователь найден"),
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
-    public ResponseEntity<User> getUserById(
+    public ResponseEntity<UserDTO> getUserById(
             @Parameter(description = "ID пользователя", required = true) @PathVariable Integer id
     ) {
-        User user = userService.getUserById(id);
-        return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
+        UserDTO userDTO = userService.getUserById(id);
+        return userDTO != null ? ResponseEntity.ok(userDTO) : ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/search")
+    @GetMapping("{name}/search")
     @Operation(summary = "Найти пользователя по никнейму")
     @ApiResponse(responseCode = "200", description = "Результаты поиска успешно получены")
-    public ResponseEntity<List<User>> searchUserByName(
-            @Parameter(description = "Никнейм пользователя", required = true) @RequestParam String name
+    public ResponseEntity<List<UserDTO>> searchUserByName(
+            @Parameter(description = "Никнейм пользователя", required = true) @PathVariable String name
     ) {
         return ResponseEntity.ok(userService.searchUserByName(name));
     }
@@ -80,11 +87,11 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Посты успешно получены"),
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
-    public ResponseEntity<List<Post>> getUserPosts(
+    public ResponseEntity<List<PostDTO>> getUserPosts(
             @Parameter(description = "ID пользователя", required = true) @PathVariable Integer id
     ) {
-        User user = userService.getUserById(id);
-        return user != null ? ResponseEntity.ok(postService.getPostsByAuthorId(id)) : ResponseEntity.notFound().build();
+        UserDTO userDTO = userService.getUserById(id);
+        return userDTO != null ? ResponseEntity.ok(postService.getPostsByAuthorId(id)) : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{id}/all_posts")
@@ -93,11 +100,11 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Посты успешно получены"),
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
-    public ResponseEntity<List<Post>> getPostsBySubscriberId(
+    public ResponseEntity<List<PostDTO>> getPostsBySubscriberId(
             @Parameter(description = "ID пользователя", required = true) @PathVariable Integer id
     ) {
-        User user = userService.getUserById(id);
-        return user != null ? ResponseEntity.ok(subscriptionService.getPostsBySubscriberId(id)) : ResponseEntity.notFound().build();
+        UserDTO userDTO = userService.getUserById(id);
+        return userDTO != null ? ResponseEntity.ok(subscriptionService.getPostsBySubscriberId(id)) : ResponseEntity.notFound().build();
     }
 
 }

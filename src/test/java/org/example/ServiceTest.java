@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.dto.PostDTO;
 import org.example.entity.Post;
 import org.example.entity.User;
 import org.example.entity.Subscription;
@@ -33,12 +34,12 @@ public class ServiceTest {
 
     @Test
     public void a() {
-        List<Post> posts = subscriptionService.getPostsBySubscriberId(1);
+        List<PostDTO> posts = subscriptionService.getPostsBySubscriberId(1);
         if (posts.isEmpty()) {
             System.out.println(" - Нет постов");
         } else {
             System.out.println("Посты автора:");
-            for (Post post : posts) {
+            for (PostDTO post : posts) {
                 System.out.println(" - " + post.getContent());
             }
         }

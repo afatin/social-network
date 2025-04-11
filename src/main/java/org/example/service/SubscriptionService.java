@@ -4,9 +4,12 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
+import org.example.dto.DTOConverter;
+import org.example.dto.PostDTO;
 import org.example.entity.Post;
 import org.example.entity.Subscription;
 import org.example.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -16,6 +19,10 @@ import java.util.List;
 public class SubscriptionService {
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    private DTOConverter dtoConverter;
+
     @Transactional
     public Subscription createSubscription(Integer subscriberId, Integer authorId){
         User subscriber = entityManager.find(User.class, subscriberId);
@@ -52,12 +59,16 @@ public class SubscriptionService {
                 .getResultList();
     }
 
-    public List<Post> getPostsBySubscriberId(Integer subscriberId) {
+    public List<PostDTO> getPostsBySubscriberId(Integer subscriberId) {
         List<User> authors = findAuthorsBySubscriberId(subscriberId);
         String query = "SELECT p FROM Post p WHERE p.author IN :authors";
-        return entityManager.createQuery(query, Post.class)
+        List<Post> posts = entityManager.createQuery(query, Post.class)
                 .setParameter("authors", authors)
                 .getResultList();
+
+        return posts.stream()
+                .map(dtoConverter::convertToPostDTO)
+                .toList();
     }
 
 }

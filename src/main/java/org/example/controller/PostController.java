@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import org.example.dto.PostDTO;
 import org.example.entity.Post;
 import org.example.entity.User;
 import org.example.service.UserService;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -29,7 +32,7 @@ public class PostController {
     @GetMapping
     @Operation(summary = "Вывести все посты")
     @ApiResponse(responseCode = "200", description = "Список постов успешно получен")
-    public ResponseEntity<List<Post>> getAllPosts() {
+    public ResponseEntity<List<PostDTO>> getAllPosts() {
         return ResponseEntity.ok(postService.getAllPosts());
     }
 
@@ -41,11 +44,9 @@ public class PostController {
             @ApiResponse(responseCode = "400", description = "Ошибка валидации данных"),
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        return ResponseEntity.ok(postService.createPost(
-                post.getContent(),
-                post.getAuthor().getId()
-
-        ));
+    public ResponseEntity<Void> createPost(@RequestBody Post post) {
+        Post createdPost = postService.createPost(post.getContent(), post.getAuthor().getId());
+        URI location = URI.create("/posts/" + createdPost.getId());
+        return ResponseEntity.created(location).build();
     }
 }

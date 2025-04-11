@@ -12,6 +12,8 @@ import org.example.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/api/subscriptions")
 @Tag(name = "Подписки", description = "Методы для работы с подписками")
@@ -31,11 +33,14 @@ public class SubscriptionController {
             @ApiResponse(responseCode = "400", description = "Ошибка валидации данных"),
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
-    public ResponseEntity<Subscription> createSubscription(@RequestBody Subscription subscription) {
-        return ResponseEntity.ok(subscriptionService.createSubscription(
+    public ResponseEntity<Void> createSubscription(@RequestBody Subscription subscription) {
+        Subscription createdSubscription = subscriptionService.createSubscription(
                 subscription.getSubscriber().getId(),
                 subscription.getAuthor().getId()
-        ));
+        );
+
+        URI location = URI.create("/subscriptions/" + createdSubscription.getId());
+        return ResponseEntity.created(location).build();
     }
 
     @DeleteMapping

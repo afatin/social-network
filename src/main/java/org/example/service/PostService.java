@@ -1,11 +1,14 @@
 package org.example.service;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
+import org.example.dto.DTOConverter;
+import org.example.dto.PostDTO;
 import org.example.entity.Post;
 import org.example.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +17,8 @@ import java.util.List;
 public class PostService {
     @PersistenceContext
     private EntityManager entityManager;
+    @Autowired
+    private DTOConverter dtoConverter;
 
     @Transactional
     public Post createPost(String content, Integer authorId) {
@@ -25,9 +30,12 @@ public class PostService {
         return Post;
     }
 
-    public List<Post> getAllPosts() {
+    public List<PostDTO> getAllPosts() {
         String query = "SELECT c FROM Post c";
-        return entityManager.createQuery(query, Post.class).getResultList();
+        List<Post> posts = entityManager.createQuery(query, Post.class).getResultList();
+        return posts.stream()
+                .map(dtoConverter::convertToPostDTO)
+                .toList();
     }
 
     public List<Post> getPostById(Integer id) {
@@ -37,13 +45,16 @@ public class PostService {
                 .getResultList();
     }
 
-    public List<Post> getPostsByAuthorId(Integer authorId) {
+    public List<PostDTO> getPostsByAuthorId(Integer authorId) {
         String query = "SELECT p FROM Post p WHERE p.author.id = :authorId";
-        return entityManager.createQuery(query, Post.class)
+        List<Post> posts = entityManager.createQuery(query, Post.class)
                 .setParameter("authorId", authorId)
                 .getResultList();
-    }
 
+        return posts.stream()
+                .map(dtoConverter::convertToPostDTO)
+                .toList();
+    }
 
 
 

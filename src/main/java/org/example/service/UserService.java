@@ -3,7 +3,10 @@ package org.example.service;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import org.example.dto.DTOConverter;
+import org.example.dto.UserDTO;
 import org.example.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,30 +17,40 @@ public class UserService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    private DTOConverter dtoConverter;
+
     @Transactional
     public User createUser(String login, String name, String password) {
         User user = new User();
         user.setLogin(login);
         user.setName(name);
-        user.setPassword(password);  // Хеширование пароля происходит внутри сеттера
+        user.setPassword(password);
         entityManager.persist(user);
         return user;
     }
 
-    public List<User> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         String query = "SELECT u FROM User u";
-        return entityManager.createQuery(query, User.class).getResultList();
+        List<User> users = entityManager.createQuery(query, User.class).getResultList();
+        return users.stream()
+                .map(dtoConverter::convertToUserDTO)
+                .toList();
     }
 
-    public User getUserById(Integer id) {
-        return entityManager.find(User.class, id);
+    public UserDTO getUserById(Integer id) {
+        User user = entityManager.find(User.class, id);
+        return user != null ? dtoConverter.convertToUserDTO(user) : null;
     }
 
-    public List<User> searchUserByName(String nameQuery) {
+    public List<UserDTO> searchUserByName(String nameQuery) {
         String query = "SELECT u FROM User u WHERE u.name LIKE :nameQuery";
-        return entityManager.createQuery(query, User.class)
+        List<User> users = entityManager.createQuery(query, User.class)
                 .setParameter("nameQuery", "%" + nameQuery + "%")
                 .getResultList();
+        return users.stream()
+                .map(dtoConverter::convertToUserDTO)
+                .toList();
     }
 
     @Transactional
