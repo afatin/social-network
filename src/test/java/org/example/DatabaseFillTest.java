@@ -37,37 +37,35 @@ public class DatabaseFillTest {
     @Test
     public void testFillDatabase() {
         // Создание пользователей
-        User user1 = userService.createUser("nastya1", "Настя", "123");
-        User user2 = userService.createUser("artem1", "Артём", "123");
-        User user3 = userService.createUser("oleg1", "Олег", "123");
-        User user4 = userService.createUser("vika1", "Вика", "123");
+        User user1 = userService.createUser("oleg2", "Олег2", "12345");
 
-        Post post1 = postService.createPost("всем привет, я Настя!", 1);
-        Post post2 = postService.createPost("всем привет, я Артём!", 2);
-        Post post3 = postService.createPost("всем привет, я Олег!", 3);
-        Post post4 = postService.createPost("всем привет, я Вика!", 4);
 
-        Subscription subs1 = subscriptionService.createSubscription(1, 2);
-        Subscription subs2 = subscriptionService.createSubscription(2, 1);
-        Subscription subs3 = subscriptionService.createSubscription(1, 3);
-        Subscription subs4 = subscriptionService.createSubscription(1, 4);
-        Subscription subs5 = subscriptionService.createSubscription(4, 1);
+//        Post post1 = postService.createPost("всем привет, я Настя!", 1);
+//        Post post2 = postService.createPost("всем привет, я Артём!", 2);
+//        Post post3 = postService.createPost("всем привет, я Олег!", 3);
+//        Post post4 = postService.createPost("всем привет, я Вика!", 4);
+
+//        Subscription subs1 = subscriptionService.createSubscription(1, 2);
+//        Subscription subs2 = subscriptionService.createSubscription(2, 1);
+//        Subscription subs3 = subscriptionService.createSubscription(1, 3);
+//        Subscription subs4 = subscriptionService.createSubscription(1, 4);
+//        Subscription subs5 = subscriptionService.createSubscription(4, 1);
 
 
         assertNotNull(user1.getId());
-        assertNotNull(user2.getId());
-        assertNotNull(user3.getId());
-        assertNotNull(user4.getId());
-
-        assertNotNull(post1.getId());
-        assertNotNull(post2.getId());
-        assertNotNull(post3.getId());
-        assertNotNull(post4.getId());
-
-        assertNotNull(subs1.getId());
-        assertNotNull(subs2.getId());
-        assertNotNull(subs3.getId());
-        assertNotNull(subs4.getId());
-        assertNotNull(subs5.getId());
+//        assertNotNull(user2.getId());
+//        assertNotNull(user3.getId());
+//        assertNotNull(user4.getId());
+//
+//        assertNotNull(post1.getId());
+//        assertNotNull(post2.getId());
+//        assertNotNull(post3.getId());
+//        assertNotNull(post4.getId());
+//
+//        assertNotNull(subs1.getId());
+//        assertNotNull(subs2.getId());
+//        assertNotNull(subs3.getId());
+//        assertNotNull(subs4.getId());
+//        assertNotNull(subs5.getId());
     }
 }

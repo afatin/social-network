@@ -51,8 +51,8 @@ public class SubscriptionController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
     public ResponseEntity<Void> deleteSubscription(
-            @RequestParam Integer subscriberId,
-            @RequestParam Integer authorId
+            @RequestParam Long subscriberId,
+            @RequestParam Long authorId
     ) {
         subscriptionService.deleteSubscription(subscriberId, authorId);
         return ResponseEntity.ok().build();

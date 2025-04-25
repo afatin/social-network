@@ -24,7 +24,7 @@ public class SubscriptionService {
     private DTOConverter dtoConverter;
 
     @Transactional
-    public Subscription createSubscription(Integer subscriberId, Integer authorId){
+    public Subscription createSubscription(Long subscriberId, Long authorId){
         User subscriber = entityManager.find(User.class, subscriberId);
         User author = entityManager.find(User.class, authorId);
 
@@ -36,7 +36,7 @@ public class SubscriptionService {
     }
 
     @Transactional
-    public void deleteSubscription(Integer subscriberId, Integer authorId) {
+    public void deleteSubscription(Long subscriberId, Long authorId) {
         TypedQuery<Subscription> query = entityManager.createQuery(
                 "SELECT s FROM Subscription s WHERE s.subscriber.id = :subscriberId AND s.author.id = :authorId",
                 Subscription.class
@@ -51,7 +51,7 @@ public class SubscriptionService {
         }
     }
 
-    public List<User> findAuthorsBySubscriberId(Integer subscriberId) {
+    public List<User> findAuthorsBySubscriberId(Long subscriberId) {
         User subscriber = entityManager.find(User.class, subscriberId);
         String query = "SELECT s.author FROM Subscription s WHERE s.subscriber = :subscriber";
         return entityManager.createQuery(query, User.class)
@@ -59,7 +59,7 @@ public class SubscriptionService {
                 .getResultList();
     }
 
-    public List<PostDTO> getPostsBySubscriberId(Integer subscriberId) {
+    public List<PostDTO> getPostsBySubscriberId(Long subscriberId) {
         List<User> authors = findAuthorsBySubscriberId(subscriberId);
         String query = "SELECT p FROM Post p WHERE p.author IN :authors";
         List<Post> posts = entityManager.createQuery(query, Post.class)

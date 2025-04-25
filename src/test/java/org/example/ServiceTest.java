@@ -34,7 +34,7 @@ public class ServiceTest {
 
     @Test
     public void a() {
-        List<PostDTO> posts = subscriptionService.getPostsBySubscriberId(1);
+        List<PostDTO> posts = subscriptionService.getPostsBySubscriberId(1L);
         if (posts.isEmpty()) {
             System.out.println(" - Нет постов");
         } else {
@@ -45,19 +45,19 @@ public class ServiceTest {
         }
 
     }
-    @Test
-    public void b(){
-        userService.updateUserName(9, "Ванька-встанька");
-    }
-    @Test
-    public void c(){
-        userService.deleteUser(9);
-    }
-
-    @Test
-    public void d(){
-        subscriptionService.deleteSubscription(1,7);
-    }
+//    @Test
+//    public void b(){
+//        userService.updateUserName(9, "Ванька-встанька");
+//    }
+//    @Test
+//    public void c(){
+//        userService.deleteUser(9);
+//    }
+//
+//    @Test
+//    public void d(){
+//        subscriptionService.deleteSubscription(1,7);
+//    }
 
 //    @Test
 //    public void testGetSubscribedUsers() {

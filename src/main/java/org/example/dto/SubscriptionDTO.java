@@ -1,15 +1,15 @@
 package org.example.dto;
 
 public class SubscriptionDTO {
-    private Integer id;
-    private Integer subscriberId;
+    private Long id;
+    private Long subscriberId;
     private String subscriberName;
-    private Integer authorId;
+    private Long authorId;
     private String authorName;
 
     public SubscriptionDTO() {}
 
-    public SubscriptionDTO(Integer id, Integer subscriberId, String subscriberName, Integer authorId, String authorName) {
+    public SubscriptionDTO(Long id, Long subscriberId, String subscriberName, Long authorId, String authorName) {
         this.id = id;
         this.subscriberId = subscriberId;
         this.subscriberName = subscriberName;
@@ -17,17 +17,17 @@ public class SubscriptionDTO {
         this.authorName = authorName;
     }
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Integer getSubscriberId() { return subscriberId; }
-    public void setSubscriberId(Integer subscriberId) { this.subscriberId = subscriberId; }
+    public Long getSubscriberId() { return subscriberId; }
+    public void setSubscriberId(Long subscriberId) { this.subscriberId = subscriberId; }
 
     public String getSubscriberName() { return subscriberName; }
     public void setSubscriberName(String subscriberName) { this.subscriberName = subscriberName; }
 
-    public Integer getAuthorId() { return authorId; }
-    public void setAuthorId(Integer authorId) { this.authorId = authorId; }
+    public Long getAuthorId() { return authorId; }
+    public void setAuthorId(Long authorId) { this.authorId = authorId; }
 
     public String getAuthorName() { return authorName; }
     public void setAuthorName(String authorName) { this.authorName = authorName; }

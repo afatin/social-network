@@ -21,7 +21,7 @@ public class PostService {
     private DTOConverter dtoConverter;
 
     @Transactional
-    public Post createPost(String content, Integer authorId) {
+    public Post createPost(String content, Long authorId) {
         User author = entityManager.find(User.class, authorId);
         Post Post = new Post();
         Post.setContent(content);
@@ -38,14 +38,14 @@ public class PostService {
                 .toList();
     }
 
-    public List<Post> getPostById(Integer id) {
+    public List<Post> getPostById(Long id) {
         String query = "SELECT c FROM Post c WHERE c.id = :id";
         return entityManager.createQuery(query, Post.class)
                 .setParameter("id", id)
                 .getResultList();
     }
 
-    public List<PostDTO> getPostsByAuthorId(Integer authorId) {
+    public List<PostDTO> getPostsByAuthorId(Long authorId) {
         String query = "SELECT p FROM Post p WHERE p.author.id = :authorId";
         List<Post> posts = entityManager.createQuery(query, Post.class)
                 .setParameter("authorId", authorId)

@@ -9,7 +9,7 @@ public class Post implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
-    private Integer  id;
+    private Long  id;
 
     @Column(name = "content",nullable = false)
     private String content;
@@ -20,7 +20,7 @@ public class Post implements Serializable{
 
     public Post() { }
 
-    public Integer  getId() {
+    public Long  getId() {
         return id;
     }
 

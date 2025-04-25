@@ -9,7 +9,7 @@ public class Subscription implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "subscriptions_id")
-    private Integer id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "subscriber_id", nullable = false)

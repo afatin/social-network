@@ -66,7 +66,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
     public ResponseEntity<UserDTO> getUserById(
-            @Parameter(description = "ID пользователя", required = true) @PathVariable Integer id
+            @Parameter(description = "ID пользователя", required = true) @PathVariable Long id
     ) {
         UserDTO userDTO = userService.getUserById(id);
         return userDTO != null ? ResponseEntity.ok(userDTO) : ResponseEntity.notFound().build();
@@ -88,7 +88,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
     public ResponseEntity<List<PostDTO>> getUserPosts(
-            @Parameter(description = "ID пользователя", required = true) @PathVariable Integer id
+            @Parameter(description = "ID пользователя", required = true) @PathVariable Long id
     ) {
         UserDTO userDTO = userService.getUserById(id);
         return userDTO != null ? ResponseEntity.ok(postService.getPostsByAuthorId(id)) : ResponseEntity.notFound().build();
@@ -101,7 +101,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
     public ResponseEntity<List<PostDTO>> getPostsBySubscriberId(
-            @Parameter(description = "ID пользователя", required = true) @PathVariable Integer id
+            @Parameter(description = "ID пользователя", required = true) @PathVariable Long id
     ) {
         UserDTO userDTO = userService.getUserById(id);
         return userDTO != null ? ResponseEntity.ok(subscriptionService.getPostsBySubscriberId(id)) : ResponseEntity.notFound().build();

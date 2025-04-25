@@ -29,7 +29,7 @@ public class DTOConverter {
             return null;
         }
         return new SubscriptionDTO(
-                (Integer) subscription.getId(),
+                (Long) subscription.getId(),
                 subscription.getSubscriber().getId(),
                 subscription.getSubscriber().getName(),
                 subscription.getAuthor().getId(),
