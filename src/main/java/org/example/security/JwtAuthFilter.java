@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.entity.User;
+import org.example.service.RevokedTokenService;
 import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -24,9 +25,12 @@ import java.util.HashMap;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final RevokedTokenService revokedTokenService;
 
-    public JwtAuthFilter(JwtUtil jwtUtil) {
+    public JwtAuthFilter(JwtUtil jwtUtil, RevokedTokenService revokedTokenService) {
+
         this.jwtUtil = jwtUtil;
+        this.revokedTokenService = revokedTokenService;
     }
 
     @Override
@@ -51,10 +55,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         // Если токен есть, проверяем его валидность
         if (jwtUtil.validateToken(token)) {
-//            if (revokedTokenService.isTokenRevoked(token)) {
-//                sendErrorResponse(response, "Unauthorized", "Token has been revoked.", HttpServletResponse.SC_UNAUTHORIZED);
-//                return;
-//            }
+            if (revokedTokenService.isTokenRevoked(token)) {
+                sendErrorResponse(response, "Unauthorized", "Token has been revoked.", HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
 
             Authentication authentication = jwtUtil.getAuthentication(token);
 

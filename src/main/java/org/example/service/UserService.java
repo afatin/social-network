@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import org.example.dto.DTOConverter;
 import org.example.dto.UserDTO;
 import org.example.entity.User;
+import org.example.security.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,6 +28,17 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Transactional
+    public User createUser(String login, String name, String rawPassword, Role role) {
+        User user = new User();
+        user.setLogin(login);
+        user.setName(name);
+        user.setPassword(passwordEncoder.encode(rawPassword));
+        entityManager.persist(user);
+        user.setRole(role);
+        return user;
+    }
 
     @Transactional
     public User createUser(String login, String name, String rawPassword) {

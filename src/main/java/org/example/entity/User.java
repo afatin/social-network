@@ -1,6 +1,7 @@
 package org.example.entity;
 
 import jakarta.persistence.*;
+import org.example.security.Role;
 import org.example.util.PasswordUtil;
 
 import java.io.Serializable;
@@ -29,6 +30,10 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "subscriber", cascade = CascadeType.ALL)
     private List<Subscription> subscriptions;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
+
     public User() {}
 
     public Long getId() {
@@ -42,6 +47,10 @@ public class User implements Serializable {
     }
     public String getName() {
         return name;
+    }
+    public Role getRole() {return role; }
+    public void setRole(Role role) {
+        this.role = role;
     }
     public void setLogin(String login) {
         this.login = login;

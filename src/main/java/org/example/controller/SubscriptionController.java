@@ -10,6 +10,8 @@ import org.example.service.PostService;
 import org.example.service.SubscriptionService;
 import org.example.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -29,19 +31,25 @@ public class SubscriptionController {
     @PostMapping
     @Operation(summary = "Создать новую подписку")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Подписка успешно создана"),
+            @ApiResponse(responseCode = "201", description = "Подписка успешно создана"),
             @ApiResponse(responseCode = "400", description = "Ошибка валидации данных"),
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
     public ResponseEntity<Void> createSubscription(@RequestBody Subscription subscription) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        User currentUser = userService.searchUserByLogin(currentUsername);
+
         Subscription createdSubscription = subscriptionService.createSubscription(
-                subscription.getSubscriber().getId(),
-                subscription.getAuthor().getId()
+                currentUser.getId(),                     // берем подписчика из токена
+                subscription.getAuthor().getId()         // автора берем из тела запроса
         );
 
         URI location = URI.create("/subscriptions/" + createdSubscription.getId());
         return ResponseEntity.created(location).build();
     }
+
 
     @DeleteMapping
     @Operation(summary = "Удалить подписку")
@@ -50,13 +58,16 @@ public class SubscriptionController {
             @ApiResponse(responseCode = "404", description = "Подписка не найдена"),
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
-    public ResponseEntity<Void> deleteSubscription(
-            @RequestParam Long subscriberId,
-            @RequestParam Long authorId
-    ) {
-        subscriptionService.deleteSubscription(subscriberId, authorId);
+    public ResponseEntity<Void> deleteSubscription(@RequestBody Subscription request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        User currentUser = userService.searchUserByLogin(currentUsername);
+
+        subscriptionService.deleteSubscription(currentUser.getId(), request.getAuthor().getId());
         return ResponseEntity.ok().build();
     }
+
 
 
 }

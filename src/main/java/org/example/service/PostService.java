@@ -3,6 +3,7 @@ package org.example.service;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.example.dto.DTOConverter;
 import org.example.dto.PostDTO;
+import org.example.dto.UserDTO;
 import org.example.entity.Post;
 import org.example.entity.User;
 import jakarta.persistence.EntityManager;
@@ -38,11 +39,9 @@ public class PostService {
                 .toList();
     }
 
-    public List<Post> getPostById(Long id) {
-        String query = "SELECT c FROM Post c WHERE c.id = :id";
-        return entityManager.createQuery(query, Post.class)
-                .setParameter("id", id)
-                .getResultList();
+    public Post getPostById(Long id) {
+        Post post = entityManager.find(Post.class, id);
+        return post != null ? post : null;
     }
 
     public List<PostDTO> getPostsByAuthorId(Long authorId) {
@@ -56,7 +55,12 @@ public class PostService {
                 .toList();
     }
 
-
-
-
+    @Transactional
+    public void deletePost(Long postId) {
+        Post post = entityManager.find(Post.class, postId);
+        if (post != null) {
+            entityManager.remove(post);
+        }
+    }
 }
+

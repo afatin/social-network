@@ -3,6 +3,7 @@ package org.example;
 import org.example.entity.Post;
 import org.example.entity.Subscription;
 import org.example.entity.User;
+import org.example.security.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class DatabaseFillTest {
     @Test
     public void testFillDatabase() {
         // Создание пользователей
-        User user1 = userService.createUser("oleg2", "Олег2", "12345");
+        User user1 = userService.createUser("admin", "admin", "admin", Role.ADMIN);
 
 
 //        Post post1 = postService.createPost("всем привет, я Настя!", 1);
