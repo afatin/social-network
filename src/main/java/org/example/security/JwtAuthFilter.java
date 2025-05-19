@@ -3,6 +3,7 @@ package org.example.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.entity.User;
@@ -39,19 +40,32 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         // Пропускаем проверку для эндпоинтов авторизации
-        if (request.getRequestURI().startsWith("/auth/register") ||
-                request.getRequestURI().startsWith("/auth/login") || request.getRequestURI().startsWith("/auth/ping"))  {
+        if (request.getRequestURI().startsWith("/login") ||
+                request.getRequestURI().startsWith("/register") ||
+                request.getRequestURI().startsWith("/api/auth/login") ||
+                request.getRequestURI().startsWith("/api/auth/register")) {
             filterChain.doFilter(request, response);
             return;
         }
 
         String token = getTokenFromRequest(request);
+        if (token == null) {
+            if (request.getCookies() != null) {
+                for (Cookie cookie : request.getCookies()) {
+                    if ("jwt".equals(cookie.getName())) {
+                        token = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+        }
 
         // Если токен отсутствует, возвращаем 401
         if (token == null) {
             sendErrorResponse(response, "Unauthorized", "Authorization token is missing.", HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
+
 
         // Если токен есть, проверяем его валидность
         if (jwtUtil.validateToken(token)) {

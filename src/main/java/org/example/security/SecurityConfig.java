@@ -39,13 +39,25 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                                .requestMatchers("/auth/register", "/auth/login", "/auth/ping").permitAll()
-                                .requestMatchers("/auth/logout").authenticated()
+                                .requestMatchers("/api/auth/register", "/api/auth/login", "/login", "/register").permitAll()
+                                .requestMatchers("/api/auth/logout").authenticated()
+
+                                .requestMatchers(HttpMethod.GET, "/home").hasRole("USER")
+                                .requestMatchers(HttpMethod.POST, "/home/new-post").hasRole("USER")
+                                .requestMatchers(HttpMethod.POST, "/home/delete-post").hasRole("USER")
+                                .requestMatchers(HttpMethod.POST, "/password").hasRole("USER")
+
+                                .requestMatchers(HttpMethod.GET, "/users").hasRole("USER")
+                                .requestMatchers(HttpMethod.POST, "/subscribe").hasRole("USER")
+                                .requestMatchers(HttpMethod.POST, "/unsubscribe").hasRole("USER")
+
+                                .requestMatchers(HttpMethod.GET, "/feed").hasRole("USER")
+
 
                                 .requestMatchers(HttpMethod.GET, "/api/users/**").hasRole("USER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/users/me").hasRole("USER")
                                 .requestMatchers( HttpMethod.DELETE,"/api/users/**").hasRole("ADMIN")
-                                .requestMatchers( HttpMethod.POST,"/api/users/**").hasRole("ADMIN")
+                                .requestMatchers( HttpMethod.POST,"/api/users/**").hasAnyRole("USER", "ADMIN")
 
                                 .requestMatchers(HttpMethod.POST, "/api/posts/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/api/posts/**").hasAnyRole("USER", "ADMIN")

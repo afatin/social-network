@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px auto;
+            max-width: 400px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        .error {
+            color: #f44336;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .success {
+            color: #4CAF50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Регистрация</h1>
+
+<div th:if="${error}" class="error">
+    <p th:text="${error}">Ошибка регистрации</p>
+</div>
+<div th:if="${message}" class="success">
+    <p th:text="${message}">Успешная регистрация</p>
+</div>
+
+<form th:action="@{/register}" th:object="${user}" method="post">
+    <label for="name">Имя:</label>
+    <input type="text" id="name" th:field="*{name}" placeholder="Введите имя" required/>
+
+    <label for="login">Логин:</label>
+    <input type="text" id="login" th:field="*{login}" placeholder="Введите логин" required/>
+
+    <label for="password">Пароль:</label>
+    <input type="password" id="password" th:field="*{password}" placeholder="Введите пароль" required/>
+
+    <button type="submit">Зарегистрироваться</button>
+</form>
+
+<div class="login-link">
+    <p>Уже есть аккаунт? <a th:href="@{/login}">Войти</a></p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Личный кабинет</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px auto;
+            max-width: 600px;
+            padding-bottom: 70px; /* Добавлено место для нижней панели */
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            margin-bottom: 30px;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            resize: vertical;
+        }
+        button {
+            padding: 8px 16px;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        button.delete {
+            background-color: #f44336;
+            float: right;
+        }
+        .post {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .password-form {
+            margin-bottom: 80px; /* Дополнительный отступ перед панелью */
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #eee;
+            border-top: 1px solid #ccc;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            font-size: 16px;
+        }
+        .bottom-nav .nav-item {
+            text-decoration: none;
+            color: #333;
+            padding: 8px 12px;
+            transition: background-color 0.3s;
+        }
+        .bottom-nav .nav-item:hover {
+            background-color: #ddd;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Привет, <span th:text="${name}">Имя пользователя</span>!</h1>
+
+<!-- Форма для нового поста -->
+<h2>Создать новый пост</h2>
+<form th:action="@{/home/new-post}" method="post">
+    <textarea name="content" rows="4" placeholder="Что нового?"></textarea><br>
+    <button type="submit">Опубликовать</button>
+</form>
+
+<!-- Список постов -->
+<h2>Ваши посты</h2>
+<div th:each="post : ${posts}" class="post">
+    <form th:action="@{/home/delete-post}" method="post" style="display:inline;">
+        <input type="hidden" name="postId" th:value="${post.id}" />
+        <button type="submit" class="delete">Удалить</button>
+    </form>
+    <p th:text="${post.content}">Текст поста</p>
+</div>
+
+<!-- Форма смены пароля с дополнительным классом -->
+<h2>Изменить пароль</h2>
+<form method="post" action="/password" class="password-form">
+    <label for="newPassword">Новый пароль:</label>
+    <input type="password" id="newPassword" name="newPassword" required>
+    <button type="submit">Сменить пароль</button>
+</form>
+
+<!-- Нижняя панель навигации -->
+<nav class="bottom-nav">
+    <a th:href="@{/home}" class="nav-item">Главная</a>
+    <a th:href="@{/feed}" class="nav-item">Лента</a>
+    <a th:href="@{/users}" class="nav-item">Пользователи</a>
+</nav>
+
+</body>
+</html>

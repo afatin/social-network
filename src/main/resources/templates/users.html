@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Пользователи</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px auto 80px auto; /* дополнительный отступ снизу для навигации */
+            max-width: 600px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+
+        .user-block {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .login {
+            font-size: 14px;
+            color: #777;
+            margin-top: 4px;
+        }
+
+        form {
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button.unsubscribe {
+            background-color: #f44336;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #eee;
+            border-top: 1px solid #ccc;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            font-size: 16px;
+        }
+
+        .bottom-nav .nav-item {
+            text-decoration: none;
+            color: #333;
+            padding: 8px 12px;
+            transition: background-color 0.3s;
+        }
+
+        .bottom-nav .nav-item:hover {
+            background-color: #ddd;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Пользователи</h1>
+
+<h2>Вы подписаны на</h2>
+<div th:if="${subscribedUsers.isEmpty()}">
+    <p style="text-align: center; color: #888;">Вы ни на кого не подписаны</p>
+</div>
+<div th:each="user : ${subscribedUsers}" class="user-block">
+    <div class="name" th:text="${user.name}">Имя пользователя</div>
+    <div class="login" th:text="${user.login}">@логин</div>
+    <form method="post" th:action="@{/unsubscribe}">
+        <input type="hidden" name="authorId" th:value="${user.id}" />
+        <button type="submit" class="unsubscribe">Отписаться</button>
+    </form>
+</div>
+
+<h2>Все пользователи</h2>
+<div th:if="${otherUsers.isEmpty()}">
+    <p style="text-align: center; color: #888;">Нет других пользователей</p>
+</div>
+<div th:each="user : ${otherUsers}" class="user-block">
+    <div class="name" th:text="${user.name}">Имя пользователя</div>
+    <div class="login" th:text="${user.login}">@логин</div>
+    <form method="post" th:action="@{/subscribe}">
+        <input type="hidden" name="authorId" th:value="${user.id}" />
+        <button type="submit">Подписаться</button>
+    </form>
+</div>
+
+<!-- Нижняя панель навигации -->
+<nav class="bottom-nav">
+    <a th:href="@{/home}" class="nav-item">Главная</a>
+    <a th:href="@{/feed}" class="nav-item">Лента</a>
+    <a th:href="@{/users}" class="nav-item">Пользователи</a>
+</nav>
+
+</body>
+</html>

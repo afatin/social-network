@@ -61,7 +61,7 @@ public class SubscriptionService {
 
     public List<PostDTO> getPostsBySubscriberId(Long subscriberId) {
         List<User> authors = findAuthorsBySubscriberId(subscriberId);
-        String query = "SELECT p FROM Post p WHERE p.author IN :authors";
+        String query = "SELECT p FROM Post p WHERE p.author IN :authors ORDER BY p.id DESC";
         List<Post> posts = entityManager.createQuery(query, Post.class)
                 .setParameter("authors", authors)
                 .getResultList();

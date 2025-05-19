@@ -55,7 +55,7 @@ public class JwtUtil {
                     .parseClaimsJws(token)
                     .getBody();
 
-            Long id = claims.get("id", Integer.class).longValue();
+            Long id = claims.get("id", Long.class);
             String login = claims.getSubject();
             String roleStr = claims.get("role", String.class);
             Role role = Role.valueOf(roleStr);
@@ -78,4 +78,13 @@ public class JwtUtil {
                     .getBody();
             return claims.getSubject();
         }
+
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.get("id", Integer.class).longValue();
+    }
     }

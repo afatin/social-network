@@ -5,6 +5,7 @@ import org.example.dto.PostDTO;
 import org.example.dto.UserDTO;
 import org.example.entity.Post;
 import org.example.entity.User;
+import org.example.service.RevokedTokenService;
 import org.example.service.SubscriptionService;
 import org.example.service.UserService;
 import org.example.service.PostService;
@@ -30,11 +31,13 @@ public class UserController {
     private final UserService userService;
     private final PostService postService;
     private final SubscriptionService subscriptionService;
+    private final RevokedTokenService revokedTokenService;
 
-    public UserController(UserService userService, PostService postService, SubscriptionService subscriptionService) {
+    public UserController(UserService userService, PostService postService, SubscriptionService subscriptionService, RevokedTokenService revokedTokenService) {
         this.userService = userService;
         this.postService = postService;
         this.subscriptionService = subscriptionService;
+        this.revokedTokenService = revokedTokenService;
     }
 
     @PostMapping
@@ -123,6 +126,30 @@ public class UserController {
         userService.deleteUser(currentUser.getId());
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/me/password")
+    @Operation(summary = "Изменить пароль текущего пользователя")
+    public ResponseEntity<String> updatePassword(@RequestHeader("Authorization") String authHeader, @RequestBody String newPassword) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.badRequest().body("Missing or invalid Authorization header");
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        User currentUser = userService.searchUserByLogin(currentUsername);
+        if (currentUser == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        userService.updateUserPassword(currentUser.getId(), newPassword);
+
+        // Отзываем текущий токен после смены пароля
+        String token = authHeader.substring(7); // Убираем "Bearer "
+        revokedTokenService.revokeToken(token);
+
+        return ResponseEntity.ok("Password updated successfully. Please login again.");
     }
 
 }

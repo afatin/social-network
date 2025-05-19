@@ -73,11 +73,11 @@ public class UserService {
                 .toList();
     }
 
-    public User searchUserByLogin(String loginQuery) {
-        String query = "SELECT u FROM User u WHERE u.login LIKE :loginQuery";
+    public User searchUserByLogin(String login) {
+        String query = "SELECT u FROM User u WHERE u.login = :login";
         try {
             return entityManager.createQuery(query, User.class)
-                    .setParameter("loginQuery", "%" + loginQuery + "%")
+                    .setParameter("login", login)
                     .getSingleResult();
         } catch (NoResultException e) {
             return null;
@@ -98,6 +98,15 @@ public class UserService {
         User user = entityManager.find(User.class, userId);
         if (user != null) {
             entityManager.remove(user);
+        }
+    }
+
+    @Transactional
+    public void updateUserPassword(Long userId, String rawPassword) {
+        User user = entityManager.find(User.class, userId);
+        if (user != null) {
+            user.setPassword(passwordEncoder.encode(rawPassword));
+            entityManager.merge(user);
         }
     }
 

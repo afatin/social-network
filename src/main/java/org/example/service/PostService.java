@@ -45,7 +45,7 @@ public class PostService {
     }
 
     public List<PostDTO> getPostsByAuthorId(Long authorId) {
-        String query = "SELECT p FROM Post p WHERE p.author.id = :authorId";
+        String query = "SELECT p FROM Post p WHERE p.author.id = :authorId ORDER BY p.id DESC";
         List<Post> posts = entityManager.createQuery(query, Post.class)
                 .setParameter("authorId", authorId)
                 .getResultList();
@@ -62,5 +62,7 @@ public class PostService {
             entityManager.remove(post);
         }
     }
+
+
 }
 

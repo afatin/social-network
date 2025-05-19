@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход в систему</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px auto;
+            max-width: 400px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        .error {
+            color: #f44336;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Вход в систему</h1>
+
+<div th:if="${error}" class="error">
+    <p th:text="${error}">Ошибка входа</p>
+</div>
+
+<form th:action="@{/login}" th:object="${loginRequest}" method="post">
+    <label for="login">Логин:</label>
+    <input type="text" id="login" th:field="*{login}" placeholder="Введите логин" required/>
+
+    <label for="password">Пароль:</label>
+    <input type="password" id="password" th:field="*{password}" placeholder="Введите пароль" required/>
+
+    <button type="submit">Войти</button>
+</form>
+
+<div class="register-link">
+    <p>Нет аккаунта? <a th:href="@{/register}">Зарегистрируйтесь</a></p>
+</div>
+
+</body>
+</html>
