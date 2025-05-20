@@ -12,7 +12,9 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
@@ -20,16 +22,26 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
+
     private final JwtUtil jwtUtil;
     private final MyUserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final RevokedTokenService revokedTokenService;
+    private final AuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final AccessDeniedHandler customAccessDeniedHandler;
 
-    public SecurityConfig(JwtUtil jwtUtil, MyUserDetailsService userDetailsService, PasswordEncoder passwordEncoder, RevokedTokenService revokedTokenService) {
+    public SecurityConfig(JwtUtil jwtUtil,
+                          MyUserDetailsService userDetailsService,
+                          PasswordEncoder passwordEncoder,
+                          RevokedTokenService revokedTokenService,
+                          AuthenticationEntryPoint customAuthenticationEntryPoint,
+                          AccessDeniedHandler customAccessDeniedHandler) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.revokedTokenService = revokedTokenService;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
     @Bean
@@ -39,7 +51,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                                .requestMatchers("/api/auth/register", "/api/auth/login", "/login", "/register").permitAll()
+                                .requestMatchers("/api/auth/register", "/api/auth/login", "/login", "/register", "/error/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/out").authenticated()
 
                                 .requestMatchers( "/home/**").hasRole("USER")
@@ -70,6 +82,11 @@ public class SecurityConfig {
 
                                 .requestMatchers(HttpMethod.POST, "/api/subscriptions/**").hasRole("USER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/subscriptions/**").hasRole("USER")
+                )
+
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
                 )
 
                 .addFilterBefore(new JwtAuthFilter(jwtUtil, revokedTokenService), UsernamePasswordAuthenticationFilter.class);

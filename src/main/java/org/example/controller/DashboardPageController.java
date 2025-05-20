@@ -32,14 +32,11 @@ public class DashboardPageController {
         @GetMapping("/dashboard")
         public String dashboard(@CookieValue(value = "jwt", defaultValue = "") String jwt,
                                 Model model) {
-            if (jwt.isEmpty() || !jwtUtil.validateToken(jwt)) {
-                return "redirect:/login";
-            }
 
             Long currentUserId = jwtUtil.getUserIdFromToken(jwt);
             UserDTO currentUser = userService.getUserById(currentUserId);
 
-            
+
             List<UserDTO> allUsers = userService.getAllUsers().stream()
                     .filter(user -> !user.getId().equals(currentUserId))
                     .collect(Collectors.toList());
