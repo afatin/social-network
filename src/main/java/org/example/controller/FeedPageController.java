@@ -41,19 +41,14 @@ public class FeedPageController {
             @CookieValue(value = "jwt", defaultValue = "") String jwt,
             Model model
     ) {
-        System.out.println("Token from request: " + jwt);
         if (jwt.isEmpty() || !jwtUtil.validateToken(jwt)) {
             return "redirect:/login";
         }
 
 
         Long userId = jwtUtil.getUserIdFromToken(jwt);
-        UserDTO userDTO = userService.getUserById(userId);
         List<PostDTO> posts = subscriptionService.getPostsBySubscriberId(userId);
 
-        if (userDTO == null) {
-            return "redirect:/login";
-        }
 
         model.addAttribute("posts", posts);
 

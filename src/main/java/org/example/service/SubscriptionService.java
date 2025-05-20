@@ -6,6 +6,7 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.example.dto.DTOConverter;
 import org.example.dto.PostDTO;
+import org.example.dto.UserDTO;
 import org.example.entity.Post;
 import org.example.entity.Subscription;
 import org.example.entity.User;
@@ -58,6 +59,7 @@ public class SubscriptionService {
                 .setParameter("subscriber", subscriber)
                 .getResultList();
     }
+
 
     public List<PostDTO> getPostsBySubscriberId(Long subscriberId) {
         List<User> authors = findAuthorsBySubscriberId(subscriberId);

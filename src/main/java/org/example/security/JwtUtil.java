@@ -4,6 +4,7 @@ package org.example.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,9 +15,16 @@ import java.util.*;
 
 @Component
 public class JwtUtil {
-        byte[] SECRET = "my-very-secret-key-hguguuvuru2347623547-bvvdfjvbdjvbdv-bv-hffbvvghvv".getBytes(); // Секретный ключ
-        private final Key key = Keys.hmacShaKeyFor(SECRET);
-        private final long JWT_EXPIRATION = 86400000; // 1 день
+        private final Key key;
+        private final long jwtExpiration;
+
+        public JwtUtil(
+                @Value("${jwt.secret}") String secret,
+                @Value("${jwt.expiration}") long jwtExpiration
+        ) {
+            this.key = Keys.hmacShaKeyFor(secret.getBytes());
+            this.jwtExpiration = jwtExpiration;
+        }
 
         // Генерация токена
         public String generateToken(Authentication authentication) {
@@ -29,7 +37,7 @@ public class JwtUtil {
                     .claim("id", userPrincipal.getId())                    // id
                     .claim("role", role)                                   // роль
                     .setIssuedAt(new Date())
-                    .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
+                    .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                     .signWith(key)
                     .compact();
         }

@@ -1,6 +1,7 @@
 package org.example.service;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -63,6 +64,8 @@ public class UserService {
         return user != null ? dtoConverter.convertToUserDTO(user) : null;
     }
 
+
+
     public List<UserDTO> searchUserByName(String nameQuery) {
         String query = "SELECT u FROM User u WHERE u.name LIKE :nameQuery";
         List<User> users = entityManager.createQuery(query, User.class)
@@ -96,9 +99,27 @@ public class UserService {
     @Transactional
     public void deleteUser(Long userId) {
         User user = entityManager.find(User.class, userId);
-        if (user != null) {
-            entityManager.remove(user);
+        if (user == null) {
+            throw new EntityNotFoundException("User not found with id: " + userId);
         }
+
+        // Удаляем все посты пользователя
+        entityManager.createQuery("DELETE FROM Post p WHERE p.author.id = :userId")
+                .setParameter("userId", userId)
+                .executeUpdate();
+
+        // Удаляем все подписки, где пользователь является подписчиком (subscriptions где он subscriber)
+        entityManager.createQuery("DELETE FROM Subscription s WHERE s.subscriber.id = :userId")
+                .setParameter("userId", userId)
+                .executeUpdate();
+
+        // Удаляем все подписки, где пользователь является автором (subscriptions где он author)
+        entityManager.createQuery("DELETE FROM Subscription s WHERE s.author.id = :userId")
+                .setParameter("userId", userId)
+                .executeUpdate();
+
+        // Удаляем самого пользователя
+        entityManager.remove(user);
     }
 
     @Transactional

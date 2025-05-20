@@ -57,14 +57,10 @@
     </style>
 </head>
 <body>
-
 <h1>Регистрация</h1>
 
-<div th:if="${error}" class="error">
-    <p th:text="${error}">Ошибка регистрации</p>
-</div>
-<div th:if="${message}" class="success">
-    <p th:text="${message}">Успешная регистрация</p>
+<div th:if="${error}" class="alert alert-danger" role="alert">
+    <span th:text="${error}">Текст ошибки</span>
 </div>
 
 <form th:action="@{/register}" th:object="${user}" method="post">

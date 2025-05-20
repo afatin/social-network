@@ -2,37 +2,32 @@ package org.example.controller;
 
 import org.example.dto.PostDTO;
 import org.example.dto.UserDTO;
-import org.example.entity.User;
 import org.example.security.JwtUtil;
 import org.example.service.PostService;
 import org.example.service.RevokedTokenService;
 import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import jakarta.servlet.http.HttpServletResponse;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Controller
 public class HomePageController {
 
-    private final AuthController authController;
     private final JwtUtil jwtUtil;
     private final UserService userService;
     private final PostService postService;
     private final RevokedTokenService revokedTokenService;
 
     @Autowired
-    public HomePageController(AuthController authController, JwtUtil jwtUtil, UserService userService, PostService postService,
+    public HomePageController(JwtUtil jwtUtil, UserService userService, PostService postService,
                               RevokedTokenService revokedTokenService) {
-        this.authController = authController;
         this.userService = userService;
         this.jwtUtil = jwtUtil;
         this.postService = postService;
@@ -54,9 +49,6 @@ public class HomePageController {
         UserDTO userDTO = userService.getUserById(userId);
         List<PostDTO> userPosts = postService.getPostsByAuthorId(userId);
 
-        if (userDTO == null) {
-            return "redirect:/login";
-        }
 
         model.addAttribute("name", userDTO.getName());
         model.addAttribute("posts", userPosts);
@@ -99,12 +91,40 @@ public class HomePageController {
             @RequestParam("newPassword") String newPassword
     ) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
+        Long userId = jwtUtil.getUserIdFromToken(jwt);
 
-        User currentUser = userService.searchUserByLogin(currentUsername);
+        userService.updateUserPassword(userId, newPassword);
 
-        userService.updateUserPassword(currentUser.getId(), newPassword);
+        revokedTokenService.revokeToken(jwt);
+
+        return "redirect:/login";
+    }
+
+    @GetMapping("/settings")
+    public String settingsPage() {
+        return "settings";
+    }
+
+    @PostMapping("/delete-account-confirm")
+    public String confirmDeleteAccount(Model model) {
+        model.addAttribute("showConfirmation", true);
+        return "settings";
+    }
+
+    @PostMapping("/delete-account")
+    public String deleteAccount(@CookieValue(value = "jwt", defaultValue = "") String jwt) {
+
+        Long userId = jwtUtil.getUserIdFromToken(jwt);
+
+        userService.deleteUser(userId);
+        revokedTokenService.revokeToken(jwt);
+
+        return "redirect:/login";
+    }
+
+    @PostMapping("/out")
+    public String logout(@CookieValue(value = "jwt", defaultValue = "") String jwt,
+                         HttpServletResponse response) {
 
         revokedTokenService.revokeToken(jwt);
 

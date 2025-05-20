@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +26,7 @@ public class UsersPageController {
     private final UserService userService;
     private final SubscriptionService subscriptionService;
     @Autowired
-    public UsersPageController(JwtUtil jwtUtil, UserService userService, PostService postService, SubscriptionService subscriptionService) {
+    public UsersPageController(JwtUtil jwtUtil, UserService userService, SubscriptionService subscriptionService) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
         this.subscriptionService = subscriptionService;
@@ -43,11 +42,7 @@ public class UsersPageController {
         }
 
         Long userId = jwtUtil.getUserIdFromToken(jwt);
-        UserDTO currentUser = userService.getUserById(userId);
 
-        if (currentUser == null) {
-            return "redirect:/login";
-        }
 
         List<UserDTO> allUsers = userService.getAllUsers();
         List<User> subscribed = subscriptionService.findAuthorsBySubscriberId(userId);
@@ -76,6 +71,43 @@ public class UsersPageController {
 
         return "users";
     }
+
+//    @GetMapping("/users")
+//    public String getUsersPage(
+//            @CookieValue(value = "jwt", defaultValue = "") String jwt,
+//            Model model
+//    ) {
+//        if (jwt.isEmpty() || !jwtUtil.validateToken(jwt)) {
+//            return "redirect:/login";
+//        }
+//
+//        Long userId = jwtUtil.getUserIdFromToken(jwt);
+//
+//
+//        List<UserDTO> allUsers = userService.getAllUsers();
+//        List<UserDTO> subscribed = subscriptionService.findAuthorsBySubscriberId(userId);
+//
+//
+//        List<UserDTO> subscribedUsers = new ArrayList<>();
+//        List<UserDTO> otherUsers = new ArrayList<>();
+//
+//        for (UserDTO user : subscribed) {
+//            if ((user.getId().equals(userId)) || (Objects.equals(user.getLogin(), "admin"))) {
+//                continue;
+//            }
+//            if (subscribedIds.contains(user.getId())) {
+//                subscribedUsers.add(user);
+//            } else {
+//                otherUsers.add(user);
+//            }
+//        }
+//
+//        model.addAttribute("subscribedUsers", subscribedUsers);
+//        model.addAttribute("otherUsers", otherUsers);
+//        model.addAttribute("currentUserId", userId); // Для подписки/отписки
+//
+//        return "users";
+//    }
 
     @PostMapping("/subscribe")
     public String subscribe(

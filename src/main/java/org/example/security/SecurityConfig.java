@@ -40,18 +40,22 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                                 .requestMatchers("/api/auth/register", "/api/auth/login", "/login", "/register").permitAll()
-                                .requestMatchers("/api/auth/logout").authenticated()
+                                .requestMatchers(HttpMethod.POST, "/out").authenticated()
 
-                                .requestMatchers(HttpMethod.GET, "/home").hasRole("USER")
-                                .requestMatchers(HttpMethod.POST, "/home/new-post").hasRole("USER")
-                                .requestMatchers(HttpMethod.POST, "/home/delete-post").hasRole("USER")
+                                .requestMatchers( "/home/**").hasRole("USER")
                                 .requestMatchers(HttpMethod.POST, "/password").hasRole("USER")
+                                .requestMatchers(HttpMethod.GET, "/settings").hasRole("USER")
+                                .requestMatchers(HttpMethod.POST, "/delete-account-confirm").hasRole("USER")
+                                .requestMatchers(HttpMethod.POST, "/delete-account").hasRole("USER")
+
 
                                 .requestMatchers(HttpMethod.GET, "/users").hasRole("USER")
                                 .requestMatchers(HttpMethod.POST, "/subscribe").hasRole("USER")
                                 .requestMatchers(HttpMethod.POST, "/unsubscribe").hasRole("USER")
 
                                 .requestMatchers(HttpMethod.GET, "/feed").hasRole("USER")
+
+                                .requestMatchers("/dashboard/**").hasRole("ADMIN")
 
 
                                 .requestMatchers(HttpMethod.GET, "/api/users/**").hasRole("USER")
