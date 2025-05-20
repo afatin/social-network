@@ -1,7 +1,8 @@
-version: '3'
+version: '3.8'
+
 services:
   postgres:
-    build: .
+    image: postgres:15
     container_name: postgres-container
     ports:
       - "5432:5432"
@@ -11,6 +12,19 @@ services:
       POSTGRES_PASSWORD: mypassword
     volumes:
       - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    container_name: spring-backend
+    ports:
+      - "9090:9090"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mydatabase
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
 
 volumes:
   pgdata:

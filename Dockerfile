@@ -1,10 +1,18 @@
-# Используем официальный образ PostgreSQL
-FROM postgres:latest
+# Используем официальный образ Maven с JDK 17
+FROM maven:3.9.6-eclipse-temurin-17
 
-# Устанавливаем переменные окружения для настроек БД
-ENV POSTGRES_DB=mydatabase
-ENV POSTGRES_USER=myuser
-ENV POSTGRES_PASSWORD=mypassword
+# Устанавливаем рабочую директорию
+WORKDIR /app
 
-# Открываем порт для PostgreSQL
-EXPOSE 5432
+# Копируем pom.xml и загружаем зависимости (кэширование)
+COPY pom.xml . 
+RUN mvn dependency:go-offline
+
+# Копируем остальные файлы
+COPY . .
+
+# Собираем приложение
+RUN mvn clean package -DskipTests
+
+# Запускаем приложение (поменяй имя JAR, если нужно)
+CMD ["java", "-jar", "target/social-network-1.0-SNAPSHOT.jar"]

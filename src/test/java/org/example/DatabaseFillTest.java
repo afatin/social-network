@@ -16,6 +16,7 @@ import org.example.service.UserService;
 import org.example.SocialNetworkApplication;
 
 
+import static org.example.security.Role.ADMIN;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = SocialNetworkApplication.class)
@@ -38,7 +39,7 @@ public class DatabaseFillTest {
     @Test
     public void testFillDatabase() {
         // Создание пользователей
-        User user1 = userService.createUser("admin", "admin", "admin", Role.ADMIN);
+        User user1 = userService.createUser("admin", "admin", "admin",ADMIN);
 
 
 //        Post post1 = postService.createPost("всем привет, я Настя!", 1);
