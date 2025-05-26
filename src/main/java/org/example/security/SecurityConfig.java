@@ -49,6 +49,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
 
+
+
                 .authorizeHttpRequests(auth -> auth
 
                                 .requestMatchers("/api/auth/register", "/api/auth/login", "/login", "/register", "/error/**").permitAll()
@@ -88,6 +90,8 @@ public class SecurityConfig {
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
                         .accessDeniedHandler(customAccessDeniedHandler)
                 )
+
+
 
                 .addFilterBefore(new JwtAuthFilter(jwtUtil, revokedTokenService), UsernamePasswordAuthenticationFilter.class);
 

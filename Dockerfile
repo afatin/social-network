@@ -14,5 +14,5 @@ COPY . .
 # Собираем приложение
 RUN mvn clean package -DskipTests
 
-# Запускаем приложение (поменяй имя JAR, если нужно)
+# Запускаем приложение
 CMD ["java", "-jar", "target/social-network-1.0-SNAPSHOT.jar"]
